@@ -11,6 +11,9 @@ interface Message {
   timestamp: Date;
 }
 
+// Ensure you have a .env.local file with VITE_N8N_WEBHOOK_URL=...
+const N8N_WEBHOOK_URL = import.meta.env.VITE_N8N_WEBHOOK_URL;
+
 export const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
@@ -25,6 +28,11 @@ export const ChatInterface = () => {
   }, [messages, isTyping]);
 
   const sendMessage = async (messageText: string) => {
+    if (!N8N_WEBHOOK_URL) {
+      toast.error('Webhook URL is not configured. Please check your .env.local file.');
+      return;
+    }
+
     const userMessage: Message = {
       id: Date.now().toString(),
       text: messageText,
@@ -36,14 +44,13 @@ export const ChatInterface = () => {
     setIsTyping(true);
 
     try {
-      const response = await fetch('https://kalais.app.n8n.cloud/webhook/3116ae93-98c5-401d-a23c-c33c3f818536', {
+      const response = await fetch(N8N_WEBHOOK_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           message: messageText,
-          timestamp: new Date().toISOString(),
           user: 'Kalai',
         }),
       });
@@ -53,25 +60,34 @@ export const ChatInterface = () => {
       }
 
       const data = await response.json();
+      
+      //  ======================================================
+      //  === THIS IS THE CRITICAL FIX - READ FROM `output`! ===
+      //  ======================================================
+      const aiResponseText = data.output;
+
+      if (!aiResponseText) {
+        throw new Error("AI response was empty or in the wrong format. Expected 'output' key.");
+      }
 
       setTimeout(() => {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
-          text: data.response || data.message || "MOMO responded, but check your webhook format.",
+          text: aiResponseText, // We use the correct response here
           isUser: false,
           timestamp: new Date(),
         };
 
         setMessages(prev => [...prev, assistantMessage]);
         setIsTyping(false);
-      }, 1000 + Math.random() * 1000);
+      }, 1000 + Math.random() * 500);
 
     } catch (error) {
       console.error('Error sending message:', error);
       setTimeout(() => {
         const errorMessage: Message = {
           id: (Date.now() + 1).toString(),
-          text: "⚠️ MOMO is having trouble connecting. Please check your webhook URL.",
+          text: "⚠️ MOMO is having trouble connecting. Please check your webhook URL or console for errors.",
           isUser: false,
           timestamp: new Date(),
         };
