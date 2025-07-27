@@ -1,0 +1,243 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Futuristic background gradients */
+    --background: 210 100% 98%;
+    --background-gradient: linear-gradient(135deg, hsl(210 100% 98%) 0%, hsl(200 100% 95%) 25%, hsl(190 80% 97%) 50%, hsl(220 90% 96%) 75%, hsl(240 60% 98%) 100%);
+    --background-overlay: linear-gradient(45deg, hsl(220 100% 95% / 0.3) 0%, hsl(280 100% 95% / 0.2) 100%);
+    
+    /* Glassmorphism colors */
+    --glass-bg: 220 60% 98% / 0.4;
+    --glass-border: 220 40% 90% / 0.3;
+    --glass-shadow: 220 25% 60% / 0.1;
+    
+    /* Futuristic accent colors */
+    --primary: 270 100% 70%;
+    --primary-glow: 270 100% 85%;
+    --primary-dark: 270 80% 55%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 200 100% 88%;
+    --secondary-glow: 200 100% 95%;
+    --secondary-foreground: 220 80% 20%;
+    
+    --accent: 320 100% 75%;
+    --accent-glow: 320 100% 90%;
+    --accent-foreground: 0 0% 100%;
+    
+    /* Chat colors */
+    --chat-user: 270 100% 70%;
+    --chat-assistant: 0 0% 100% / 0.9;
+    --chat-user-text: 0 0% 100%;
+    --chat-assistant-text: 220 80% 20%;
+    
+    /* UI elements */
+    --foreground: 220 80% 15%;
+    --muted: 220 40% 90% / 0.6;
+    --muted-foreground: 220 30% 60%;
+    --border: 220 40% 90% / 0.4;
+    --input: 0 0% 100% / 0.7;
+    --ring: 270 100% 70% / 0.5;
+    
+    /* Glowing effects */
+    --glow-primary: 0 0 40px hsl(270 100% 70% / 0.4);
+    --glow-secondary: 0 0 30px hsl(200 100% 88% / 0.3);
+    --glow-accent: 0 0 25px hsl(320 100% 75% / 0.3);
+    
+    --radius: 1.2rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply text-foreground overflow-hidden;
+    background: var(--background-gradient);
+    min-height: 100vh;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--background-overlay);
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+@layer components {
+  /* Glassmorphism container */
+  .glass-container {
+    @apply backdrop-blur-xl border;
+    background: hsl(var(--glass-bg));
+    border-color: hsl(var(--glass-border));
+    box-shadow: 
+      0 8px 32px hsl(var(--glass-shadow)),
+      inset 0 1px 0 hsl(220 40% 100% / 0.2);
+  }
+
+  /* Chat message bubbles */
+  .chat-bubble-user {
+    @apply rounded-[1.5rem] px-6 py-4 max-w-[80%] ml-auto backdrop-blur-sm;
+    background: linear-gradient(135deg, hsl(var(--chat-user)) 0%, hsl(var(--primary-dark)) 100%);
+    color: hsl(var(--chat-user-text));
+    box-shadow: var(--glow-primary);
+    border: 1px solid hsl(var(--primary-glow) / 0.3);
+  }
+
+  .chat-bubble-assistant {
+    @apply rounded-[1.5rem] px-6 py-4 max-w-[80%] mr-auto backdrop-blur-sm;
+    background: hsl(var(--chat-assistant));
+    color: hsl(var(--chat-assistant-text));
+    box-shadow: 0 4px 16px hsl(var(--glass-shadow));
+    border: 1px solid hsl(var(--glass-border));
+  }
+
+  /* Floating animations */
+  .floating-orb {
+    @apply absolute rounded-full opacity-60 animate-pulse;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .floating-ring {
+    @apply absolute border-2 rounded-full opacity-40;
+    animation: rotate 20s linear infinite, float 8s ease-in-out infinite;
+  }
+
+  /* Input styling */
+  .chat-input {
+    @apply w-full px-6 py-4 rounded-full border-0 outline-0 backdrop-blur-sm text-lg;
+    background: hsl(var(--input));
+    box-shadow: 
+      inset 0 2px 8px hsl(var(--glass-shadow)),
+      0 0 0 1px hsl(var(--glass-border));
+  }
+
+  .chat-input:focus {
+    box-shadow: 
+      inset 0 2px 8px hsl(var(--glass-shadow)),
+      0 0 0 2px hsl(var(--ring)),
+      var(--glow-primary);
+  }
+
+  /* Button styles */
+  .action-button {
+    @apply w-12 h-12 rounded-full flex items-center justify-center backdrop-blur-sm transition-all duration-300 hover:scale-110;
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+    box-shadow: var(--glow-primary);
+    border: 1px solid hsl(var(--primary-glow) / 0.3);
+  }
+
+  .action-button:hover {
+    box-shadow: var(--glow-primary), 0 0 20px hsl(var(--accent) / 0.4);
+  }
+
+  /* Typing indicator */
+  .typing-dots {
+    @apply flex space-x-1;
+  }
+
+  .typing-dot {
+    @apply w-2 h-2 rounded-full;
+    background: hsl(var(--muted-foreground));
+    animation: typing 1.4s infinite ease-in-out;
+  }
+
+  .typing-dot:nth-child(1) { animation-delay: 0.0s; }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-10px); opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(100px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeInScale {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
